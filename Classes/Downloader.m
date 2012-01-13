@@ -7,9 +7,10 @@
 //
 
 #import "Downloader.h"
+#import "Loader.h"
 
 static Downloader *g_downloader;
-static NSMutableDictionary *connectionDic;   //key: url value: NSURLConnection
+static NSMutableDictionary *loaderDic;   //key: url value: Loader
 
 @implementation Downloader
 
@@ -17,36 +18,38 @@ static NSMutableDictionary *connectionDic;   //key: url value: NSURLConnection
 {
 	if (!g_downloader) {
 		g_downloader = [[Downloader alloc] init];
-		connectionDic = [[NSMutableDictionary alloc] initWithCapacity:8];
+		loaderDic = [[NSMutableDictionary alloc] initWithCapacity:8];
 	}
 	return g_downloader;
 }
 
 - (void)dealloc
 {
-	for (NSURLConnection *connection in [connectionDic allValues]) {
-		[connection cancel];
+	for (Loader *loader in [loaderDic allValues]) {
+		[loader cancel];
 	}
 	
-	[connectionDic removeAllObjects];
-	[connectionDic release];
+	[loaderDic removeAllObjects];
+	[loaderDic release];
+	loaderDic = nil;
 	g_downloader = nil;
 	[super dealloc];
 }
 
 - (BOOL)startDownloadURL:(NSURL *)url
 {
-	if (!url || !connectionDic) {
+	if (!url || !loaderDic) {
 		return NO;
 	}
 	
-	if ([connectionDic objectForKey:url]) {
+	if ([loaderDic objectForKey:url]) {
 		return YES;		//url is in downloading
 	} 
 
-	NSURLRequest *request = [NSURLRequest requestWithURL: url];
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest: request delegate: self];
-	[connectionDic setObject:connection forKey:url];
+	Loader *loader = [[Loader alloc] initWithURL:url];
+	[loader load];
+	[loaderDic setObject:loader forKey:url];
+	[loader release];
 	return YES;
 }
 

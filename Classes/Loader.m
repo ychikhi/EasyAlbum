@@ -42,4 +42,9 @@
 	connection = [[NSURLConnection alloc] initWithRequest: request delegate: self];
 }
 
+- (void)cancel
+{
+	[connection cancel];
+}
+
 @end

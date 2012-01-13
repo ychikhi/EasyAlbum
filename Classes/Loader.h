@@ -20,5 +20,6 @@
 
 - (id)initWithURL:(NSURL *)url;
 - (void)load;
+- (void)cancel;
 
 @end
