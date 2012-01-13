@@ -86,4 +86,14 @@
 	return EA_UNKOWN;	 
 }
 
++ (BOOL)isSupportedFile:(NSString *)name
+{
+	if (!name) {
+		return NO; 
+	}   
+    
+	EAFileType type = [AlbumUtils detectFileType:name];
+	return type != EA_UNKOWN; 
+}
+
 @end

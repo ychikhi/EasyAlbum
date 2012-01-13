@@ -24,6 +24,7 @@ typedef enum {
 + (UIImage *)resizePhoto:(UIImage *)originPhoto;
 + (UIImage*)resizePhotoAndStore:(NSString*)imagePath;
 +(EAFileType) detectFileType:(NSString *)fileName;
++ (BOOL)isSupportedFile:(NSString *)name;
 
 @end
 
