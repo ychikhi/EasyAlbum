@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define BASE_LOCAL_PATH_DIR	@"photos"
 
 typedef enum {
 	EA_UNKOWN,
@@ -23,8 +24,10 @@ typedef enum {
 + (BOOL)isFileExsit:(NSString *)filePath;
 + (UIImage *)resizePhoto:(UIImage *)originPhoto;
 + (UIImage*)resizePhotoAndStore:(NSString*)imagePath;
-+(EAFileType) detectFileType:(NSString *)fileName;
++ (EAFileType) detectFileType:(NSString *)fileName;
 + (BOOL)isSupportedFile:(NSString *)name;
++ (NSString *)localPathForURL:(NSURL *)url;
++ (BOOL)isDirExsit:(NSString *)dirPath;
 
 @end
 

@@ -19,6 +19,16 @@
 	return [fileManager fileExistsAtPath:filePath];
 }
 
++ (BOOL)isDirExsit:(NSString *)dirPath
+{
+	if (!dirPath) {
+		return NO;
+	}
+	BOOL isDir = YES;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	return [fileManager fileExistsAtPath:dirPath isDirectory:&isDir];
+}
+
 + (UIImage *)resizePhoto:(UIImage *)originPhoto
 {
 	if (!originPhoto) {
@@ -94,6 +104,20 @@
     
 	EAFileType type = [AlbumUtils detectFileType:name];
 	return type != EA_UNKOWN; 
+}
+
++ (NSString *)localPathForURL:(NSURL *)url
+{
+	if (!url) {
+		return nil;
+	}
+	
+	NSString *homeDir = NSHomeDirectory();
+	NSString *photoName = [url lastPathComponent];
+	if (!homeDir || !photoName) {
+		return nil;
+	} 
+	return [[homeDir stringByAppendingPathComponent:BASE_LOCAL_PATH_DIR] stringByAppendingPathComponent:photoName];
 }
 
 @end

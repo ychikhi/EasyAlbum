@@ -8,6 +8,7 @@
 
 #import "Album.h"
 #import "AlbumCell.h"
+#import "AlbumUtils.h"
 
 @interface Album (AlbumPrivate)
 
@@ -58,6 +59,7 @@
 
 - (void)dealloc {
 	[imageLocalPathList release];
+	[imageURLList release];
     [super dealloc];
 }
 
@@ -101,6 +103,24 @@
 	[self refreshContentSize];
 	[self slideToIndex:index withAnimation:NO];
 	[self tilePages];
+	[self scrollViewDidEndDecelerating:pagingScrollView];
+}
+
+- (void)setURLList:(NSArray *)list withCurrentIndex:(NSUInteger)index
+{
+	if (!list || index >= [list count]) {
+		return;
+	}
+	
+	imageURLList = list;
+	NSMutableArray *pathList = [[NSMutableArray alloc] initWithCapacity:[list count]];
+	for (NSString *url in list) {
+		NSString *localPath = [AlbumUtils localPathForURL:[NSURL URLWithString:url]];
+		[pathList addObject:localPath];
+	}
+	
+	[self setImageList:pathList withCurrentIndex:index];
+	[pathList release];
 }
 
 - (void)updateImageAtIndex:(NSInteger)index

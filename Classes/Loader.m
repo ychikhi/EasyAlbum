@@ -7,12 +7,14 @@
 //
 
 #import "Loader.h"
-
+#import "AlbumUtils.h"
 
 @implementation Loader
 
 @synthesize url;
 @synthesize data;
+@synthesize delegate;
+@synthesize progress;
 
 - (id)initWithURL:(NSURL *)aUrl
 {
@@ -20,6 +22,7 @@
 	if (self) {
 		self.url = aUrl;
 		data = [[NSMutableData alloc] initWithCapacity:DEFAULT_DATA_LEN];
+		progress = 0;
 	}
 	return self;
 }
@@ -45,6 +48,43 @@
 - (void)cancel
 {
 	[connection cancel];
+}
+
+- (void) connection: (NSURLConnection *)conn didFailWithError: (NSError *)error
+{
+	if (delegate && [delegate respondsToSelector:@selector(loadDidFailed:withError:)]) {
+		[delegate loadDidFailed:url withError:-1];
+	}
+}
+
+- (void) connection: (NSURLConnection *) conn didReceiveData: (NSData *) moreData
+{
+	[data appendData:moreData];
+	progress += [moreData length];
+}
+
+- (void) connectionDidFinishLoading: (NSURLConnection *) conn
+{
+	NSString *localPath = [AlbumUtils localPathForURL:url];
+	NSString *dirPath = [localPath stringByDeletingLastPathComponent];
+	if (![AlbumUtils isDirExsit:dirPath]) {
+		[[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:nil error:nil];
+
+	}
+	if (![AlbumUtils isFileExsit:localPath]) {
+		NSFileManager *manager = [NSFileManager defaultManager];
+		[manager createFileAtPath:localPath contents:nil attributes:nil];
+	}
+	
+	if ([data writeToFile:localPath atomically:YES]) {
+		if (delegate && [delegate respondsToSelector:@selector(loadDidFinished:withLocalPath:)]) {
+			[delegate loadDidFinished:url withLocalPath:localPath];
+		}
+	} else {
+		if (delegate && [delegate respondsToSelector:@selector(loadDidFailed:withError:)]) {
+			[delegate loadDidFailed:url withError:1];
+		}
+	}
 }
 
 @end

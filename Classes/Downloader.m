@@ -14,6 +14,8 @@ static NSMutableDictionary *loaderDic;   //key: url value: Loader
 
 @implementation Downloader
 
+@synthesize delegate;
+
 + (id)defaultDownloader
 {
 	if (!g_downloader) {
@@ -32,6 +34,7 @@ static NSMutableDictionary *loaderDic;   //key: url value: Loader
 	[loaderDic removeAllObjects];
 	[loaderDic release];
 	loaderDic = nil;
+	delegate = nil;
 	g_downloader = nil;
 	[super dealloc];
 }
@@ -47,10 +50,27 @@ static NSMutableDictionary *loaderDic;   //key: url value: Loader
 	} 
 
 	Loader *loader = [[Loader alloc] initWithURL:url];
+	loader.delegate = self;
 	[loader load];
 	[loaderDic setObject:loader forKey:url];
 	[loader release];
 	return YES;
+}
+
+- (void)loadDidFailed:(NSURL *)url withError:(NSInteger)errorCode
+{
+	[loaderDic removeObjectForKey:url];
+	if (delegate && [delegate respondsToSelector:@selector(downloadDidFailed:withError:)]) {
+		[delegate downloadDidFailed:url withError:errorCode];
+	}
+}
+
+- (void)loadDidFinished:(NSURL *)url withLocalPath:(NSString *)path
+{
+	[loaderDic removeObjectForKey:url];
+	if (delegate && [delegate respondsToSelector:@selector(downloadDidFinished:withLocalPath:)]) {
+		[delegate downloadDidFinished:url withLocalPath:path];
+	}
 }
 
 @end

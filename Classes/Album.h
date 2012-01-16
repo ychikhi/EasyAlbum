@@ -16,6 +16,7 @@
 	NSMutableSet *recycledPages;
     NSMutableSet *visiblePages;
 	NSMutableArray *imageLocalPathList;
+	NSArray *imageURLList;
 	NSInteger curIndex;
 	BOOL isFullScreen;
 	NSUInteger imageCount;
@@ -43,6 +44,8 @@
 @interface Album (AlbumImage) 
 
 - (void)setImageList:(NSArray *)list withCurrentIndex:(NSUInteger)index;
+- (void)setURLList:(NSArray *)list withCurrentIndex:(NSUInteger)index;
+
 - (void)updateImageAtIndex:(NSInteger)index;
 - (void)updateImageWithPath:(NSString *)imagePath;
 

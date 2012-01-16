@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "Album.h"
+#import "Downloader.h"
 
-@interface EasyAlbumViewController : UIViewController <EasyAlbumDelegate> {
+@interface EasyAlbumViewController : UIViewController <EasyAlbumDelegate, DownloadDelegate> {
 	Album *album;
+	Downloader *downloadManager;
+	NSArray *URLArray;
 }
 
 - (void)setPhotoWithPath;
+- (void)setPhotoWithURL;
 
 @end
 
