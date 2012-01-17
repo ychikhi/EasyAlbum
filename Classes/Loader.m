@@ -15,6 +15,7 @@
 @synthesize data;
 @synthesize delegate;
 @synthesize progress;
+@synthesize size;
 
 - (id)initWithURL:(NSURL *)aUrl
 {
@@ -48,6 +49,11 @@
 - (void)cancel
 {
 	[connection cancel];
+}
+
+- (void) connection: (NSURLConnection *)conn didReceiveResponse: (NSURLResponse *)response
+{
+	size = [response expectedContentLength];
 }
 
 - (void) connection: (NSURLConnection *)conn didFailWithError: (NSError *)error

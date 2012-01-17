@@ -73,4 +73,22 @@ static NSMutableDictionary *loaderDic;   //key: url value: Loader
 	}
 }
 
++ (long long)sizeOfFileFor:(NSURL *)url
+{
+	Loader *loader = [loaderDic objectForKey:url];
+	if (loader) {
+		return loader.size;
+	}
+	return -1;
+}
+
++ (unsigned long long)progressFor:(NSURL *)url
+{
+	Loader *loader = [loaderDic objectForKey:url];
+	if (loader) {
+		return loader.progress;
+	}
+	return -1;
+}
+
 @end

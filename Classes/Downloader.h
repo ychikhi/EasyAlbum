@@ -20,11 +20,14 @@
 
 + (id)defaultDownloader;
 - (BOOL)startDownloadURL:(NSURL *)url;
++ (long long)sizeOfFileFor:(NSURL *)url;
++ (unsigned long long)progressFor:(NSURL *)url;
 
 @end
 
 @protocol DownloadDelegate <NSObject>
 
+@optional
 - (void)downloadDidFailed:(NSURL *)url withError:(NSInteger)errorCode;
 - (void)downloadDidFinished:(NSURL *)url withLocalPath:(NSString *)path;
 

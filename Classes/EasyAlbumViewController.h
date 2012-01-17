@@ -14,6 +14,8 @@
 	Album *album;
 	Downloader *downloadManager;
 	NSArray *URLArray;
+	NSTimer *progressTimer;
+	UILabel *progressLabel;
 }
 
 - (void)setPhotoWithPath;

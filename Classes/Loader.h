@@ -17,12 +17,14 @@
 	NSURLConnection *connection;
 	id <LoaderDelegate> delegate;
 	unsigned long long progress;
+	long long size;
 }
 
 @property (nonatomic, retain) NSURL *url;
 @property (nonatomic, retain) NSMutableData *data;
 @property (nonatomic, assign) id <LoaderDelegate> delegate;
-@property  unsigned long long progress;
+@property (nonatomic, readonly) unsigned long long progress;
+@property (nonatomic, readonly) long long size;
 
 - (id)initWithURL:(NSURL *)url;
 - (void)load;
